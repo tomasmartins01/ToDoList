@@ -4,40 +4,76 @@ class Counter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      counter: 0
+      input: "",
+      list: []
     };
+
+    this.handleChange = event => {
+      this.setState({
+        input: event.target.value
+      });
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  operation(isSum) {
-    if (isSum === true) {
-      this.setState(state => ({ counter: state.counter + 1 }));
-    } else {
-      if (this.state.counter > 0) {
-        this.setState(state => ({ counter: state.counter - 1 }));
-      }
-    }
+  handleSubmit(event) {
+    event.preventDefault();
+    this.setState(state => ({
+      input: "",
+      list: state.list.concat([state.input])
+    }));
+  }
+
+  handleDelete() {
+    this.setState({
+      input: "",
+      list: []
+    });
+  }
+
+  eachDelete(index) {
+    this.setState(state => state.list.splice(index, 1));
   }
 
   render() {
-    const numbers = Array.from(Array(this.state.counter).keys());
-    console.log(numbers);
+    const { input, list } = this.state;
+
     return (
       <div>
-        <button onClick={() => this.operation(true)}>+1</button>
-        <button
-          onClick={() => this.operation(false)}
-          disabled={this.state.counter === 0}
-        >
-          -1
-        </button>
-        <p>{this.state.counter}</p>
-
-        {this.state.counter >= 5 && <span>Congrats</span>}
-        <ul>
-          {numbers.map(value => {
-            return <li key={value}>{value}</li>;
-          })}
-        </ul>
+        <form className="all" onSubmit={event => this.handleSubmit(event)}>
+          <input
+            className="input"
+            type="text"
+            value={input}
+            onChange={this.handleChange}
+          />
+          <div className="box">
+            <button className="add" type="submit">
+              Add Task
+            </button>
+            <button
+              className="remove"
+              type="button"
+              onClick={event => this.handleDelete(event)}
+            >
+              Remove All
+            </button>
+          </div>
+        </form>
+        <div className="box2">
+          <ul>
+            {list.map((value, index) => {
+              return (
+                <li key={index}>
+                  {value}{" "}
+                  <button type="button" onClick={() => this.eachDelete(index)}>
+                    X
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     );
   }

@@ -3,7 +3,7 @@ class Header extends Component {
   render() {
     return (
       <header>
-        <h1>Counter</h1>
+        <h1 className="title">To Do List</h1>
       </header>
     );
   }
